@@ -15,7 +15,7 @@ import javax.swing.UIManager;
 
 /**
  *
- * @author student
+ * @author bor1bro
  */
 public class Integral 
 {

@@ -1,5 +1,7 @@
 package corn;
-
+import java.util.LinkedList;
+import javax.swing.table.*;
+import javax.swing.event.*;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -7,17 +9,55 @@ package corn;
 
 /**
  *
- * @author vimar
+ * @author bor1bro
  */
-public class NewJFrame extends javax.swing.JFrame {
+public class NewJFrame extends javax.swing.JFrame /*implements TableModelListener*/{
 
+    private LinkedList<RecIntegral> rows = new LinkedList<>();
+    private int offset = 0;
     /**
      * Creates new form NewJFrame
      */
     public NewJFrame() {
         initComponents();
+        //jTable1.getModel().addTableModelListener(this);
     }
-
+//    @Override
+//    public void tableChanged(TableModelEvent event)
+//    {
+//        if (event.getPoint)
+//        {
+//            TableModel model = (TableModel)event.getSource();
+//            int eventRowIndex = event.getFirstRow();
+//            RecIntegral eventRow = rows.get(eventRowIndex);
+//            int eventColumn = event.getColumn();
+//        
+//            double newData = ((Number)model.getValueAt(eventRowIndex, eventColumn)).doubleValue();
+//        
+//            switch(eventColumn)
+//            {
+//                case 0:
+//                {
+//                    eventRow.setMinValue(newData);
+//                }
+//                case 1:
+//                {
+//                    eventRow.setMaxValue(newData);
+//                }
+//                case 2:
+//                {
+//                    eventRow.setStepValue(newData);
+//                }
+//                default:
+//                {
+//                    //hz
+//                }
+//            }
+//        
+//            rows.set(eventRowIndex, eventRow);
+//        }
+        
+    //}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,19 +68,21 @@ public class NewJFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        stepValueLabel = new javax.swing.JLabel();
+        maxValueLabel = new javax.swing.JLabel();
+        minValueLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField1 = new javax.swing.JTextField();
+        integralTable = new javax.swing.JTable();
+        resultButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        minValueTextField = new javax.swing.JTextField();
+        maxValueTextField = new javax.swing.JTextField();
+        stepValueTextField = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        titleLabel = new javax.swing.JLabel();
+        clearButton = new javax.swing.JButton();
+        fillButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("sin(x)");
@@ -51,26 +93,26 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(136, 207, 187));
 
-        jLabel3.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(44, 78, 68));
-        jLabel3.setText("STEP");
+        stepValueLabel.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        stepValueLabel.setForeground(new java.awt.Color(44, 78, 68));
+        stepValueLabel.setText("STEP");
 
-        jLabel2.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(44, 78, 68));
-        jLabel2.setText("MAX");
+        maxValueLabel.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        maxValueLabel.setForeground(new java.awt.Color(44, 78, 68));
+        maxValueLabel.setText("MAX");
 
-        jLabel1.setBackground(new java.awt.Color(136, 207, 187));
-        jLabel1.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(44, 78, 68));
-        jLabel1.setText("MIN");
-        jLabel1.setOpaque(true);
+        minValueLabel.setBackground(new java.awt.Color(136, 207, 187));
+        minValueLabel.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        minValueLabel.setForeground(new java.awt.Color(44, 78, 68));
+        minValueLabel.setText("MIN");
+        minValueLabel.setOpaque(true);
 
         jScrollPane1.setBackground(new java.awt.Color(228, 255, 241));
         jScrollPane1.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
 
-        jTable1.setBackground(new java.awt.Color(228, 255, 241));
-        jTable1.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        integralTable.setBackground(new java.awt.Color(228, 255, 241));
+        integralTable.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
+        integralTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -93,68 +135,63 @@ public class NewJFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setToolTipText("ne nado bilo eto kushat'");
-        jTable1.setGridColor(new java.awt.Color(68, 121, 105));
-        jTable1.setName(""); // NOI18N
-        jTable1.setSelectionBackground(new java.awt.Color(146, 143, 131));
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
+        integralTable.setToolTipText("ne nado bilo eto kushat'");
+        integralTable.setGridColor(new java.awt.Color(68, 121, 105));
+        integralTable.setName(""); // NOI18N
+        integralTable.setSelectionBackground(new java.awt.Color(146, 143, 131));
+        integralTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(integralTable);
+        if (integralTable.getColumnModel().getColumnCount() > 0) {
+            integralTable.getColumnModel().getColumn(0).setResizable(false);
+            integralTable.getColumnModel().getColumn(1).setResizable(false);
+            integralTable.getColumnModel().getColumn(2).setResizable(false);
+            integralTable.getColumnModel().getColumn(3).setResizable(false);
         }
 
-        jButton3.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
-        jButton3.setText("RESULT");
-        jButton3.setBorder(null);
-        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+        resultButton.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        resultButton.setText("RESULT");
+        resultButton.setBorder(null);
+        resultButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton3MouseClicked(evt);
+                EstimateResult(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
-        jButton2.setText("REMOVE");
-        jButton2.setBorder(null);
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+        removeButton.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        removeButton.setText("REMOVE");
+        removeButton.setBorder(null);
+        removeButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
+                RemoveRow(evt);
             }
         });
 
-        jButton1.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
-        jButton1.setText("ADD");
-        jButton1.setBorder(null);
-        jButton1.addContainerListener(new java.awt.event.ContainerAdapter() {
-            public void componentAdded(java.awt.event.ContainerEvent evt) {
+        addButton.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+        addButton.setText("ADD");
+        addButton.setBorder(null);
+        addButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 AddRow(evt);
             }
         });
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
-            }
-        });
 
-        jTextField3.setBackground(new java.awt.Color(228, 255, 241));
-        jTextField3.setFont(new java.awt.Font("Comic Sans MS", 0, 18)); // NOI18N
+        minValueTextField.setBackground(new java.awt.Color(228, 255, 241));
+        minValueTextField.setFont(new java.awt.Font("Comic Sans MS", 0, 18)); // NOI18N
 
-        jTextField2.setBackground(new java.awt.Color(228, 255, 241));
-        jTextField2.setFont(new java.awt.Font("Comic Sans MS", 0, 18)); // NOI18N
+        maxValueTextField.setBackground(new java.awt.Color(228, 255, 241));
+        maxValueTextField.setFont(new java.awt.Font("Comic Sans MS", 0, 18)); // NOI18N
 
-        jTextField1.setBackground(new java.awt.Color(228, 255, 241));
-        jTextField1.setFont(new java.awt.Font("Comic Sans MS", 0, 18)); // NOI18N
+        stepValueTextField.setBackground(new java.awt.Color(228, 255, 241));
+        stepValueTextField.setFont(new java.awt.Font("Comic Sans MS", 0, 18)); // NOI18N
 
         jPanel2.setBackground(new java.awt.Color(228, 255, 241));
 
-        jLabel4.setBackground(new java.awt.Color(155, 209, 185));
-        jLabel4.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(44, 78, 68));
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("JEP-4 DEFINITIVE EDITION");
-        jLabel4.setFocusable(false);
+        titleLabel.setBackground(new java.awt.Color(155, 209, 185));
+        titleLabel.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
+        titleLabel.setForeground(new java.awt.Color(44, 78, 68));
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("JEP-4 DEFINITIVE EDITION");
+        titleLabel.setFocusable(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -162,13 +199,29 @@ public class NewJFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel4)
+            .addComponent(titleLabel)
         );
+
+        clearButton.setFont(new java.awt.Font("Comic Sans MS", 1, 11)); // NOI18N
+        clearButton.setText("CLEAR");
+        clearButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ClearTable(evt);
+            }
+        });
+
+        fillButton.setFont(new java.awt.Font("Comic Sans MS", 1, 11)); // NOI18N
+        fillButton.setText("FILL");
+        fillButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                FillTable(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -181,21 +234,26 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
+                            .addComponent(minValueLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(minValueTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxValueTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxValueLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(stepValueLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(stepValueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(resultButton, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(clearButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(fillButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -206,27 +264,31 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(minValueLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(minValueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(106, 106, 106))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(maxValueLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(maxValueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)))
+                        .addComponent(stepValueLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(stepValueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(resultButton, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addComponent(fillButton)
+                .addGap(13, 13, 13)
+                .addComponent(clearButton)
+                .addGap(14, 14, 14)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(256, 256, 256))
+                .addGap(183, 183, 183))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -237,47 +299,55 @@ public class NewJFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void AddRow(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_AddRow
-//        
-    }//GEN-LAST:event_AddRow
     
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
-        if (!jTextField3.getText().isEmpty() && !jTextField2.getText().isEmpty() && !jTextField1.getText().isEmpty())
+    private void AddRow(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AddRow
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) integralTable.getModel();
+        if (!minValueTextField.getText().isEmpty() && !maxValueTextField.getText().isEmpty() && !stepValueTextField.getText().isEmpty())
         {
-            Object[] rowData = 
-            {   
-            Double.parseDouble(jTextField3.getText()),
-            Double.parseDouble(jTextField2.getText()),
-            Double.parseDouble(jTextField1.getText()),
-            null
-            };
-            model.addRow(rowData);
+            RecIntegral row = new RecIntegral(Double.parseDouble(minValueTextField.getText()),
+                                              Double.parseDouble(maxValueTextField.getText()),
+                                              Double.parseDouble(stepValueTextField.getText()),
+                                              0.0);
+            if (row.getMinValue() != 0 && row.getMaxValue() != 0 && row.getStepValue() != 0)
+            {
+                rows.add(row);
+                Object[] rowData = 
+                {   
+                    rows.getLast().getMinValue(),
+                    rows.getLast().getMaxValue(),
+                    rows.getLast().getStepValue(),
+                    null
+                };
+                model.addRow(rowData);
+            }
         }
-        jTable1.setModel(model);
-    }//GEN-LAST:event_jButton1MouseClicked
+        integralTable.setModel(model);
+    }//GEN-LAST:event_AddRow
 
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
-        if (jTable1.getSelectedColumnCount() != 0 && jTable1.getRowCount() != 0)
+    private void RemoveRow(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RemoveRow
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) integralTable.getModel();
+        if (integralTable.getSelectedColumnCount() != 0 && integralTable.getRowCount() != 0)
         {
-            int rowNum = jTable1.getSelectedRows().length;
+            int rowNum = integralTable.getSelectedRows().length;
             for (int index = 0; index < rowNum; index++)
             {
-                model.removeRow(jTable1.getSelectedRow());
+                rows.remove(integralTable.getSelectedRow() + offset);
+                model.removeRow(integralTable.getSelectedRow());
             } 
+            
         }       
-        jTable1.setModel(model);
-    }//GEN-LAST:event_jButton2MouseClicked
+        integralTable.setModel(model);
+    }//GEN-LAST:event_RemoveRow
 
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+    private void EstimateResult(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EstimateResult
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) integralTable.getModel();
         for (int index = 0; index < model.getRowCount(); index++)
         {
             double resultValue = 0.0;
@@ -290,10 +360,51 @@ public class NewJFrame extends javax.swing.JFrame {
             if((maxValue > minValue) & stepValue < (maxValue - minValue))
             {
                 resultValue = integral.Estimate();
+                if (model.getRowCount() == rows.size())
+                {
+                    rows.set(index, new RecIntegral(minValue, maxValue, stepValue, resultValue));
+                }
+                else
+                {
+                    rows.set(index + offset, new RecIntegral(minValue, maxValue, stepValue, resultValue));
+                }
                 model.setValueAt(resultValue, index, 3);
             }
         }
-    }//GEN-LAST:event_jButton3MouseClicked
+    }//GEN-LAST:event_EstimateResult
+
+    private void FillTable(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FillTable
+        //fill
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) integralTable.getModel();
+        offset = 0;
+        if (model.getRowCount() == 0)
+        {
+            for (int index = 0; index < rows.size(); index++)
+            {
+                RecIntegral row = rows.get(index);
+                Object[] rowData =
+                {
+                    row.getMinValue(),
+                    row.getMaxValue(),
+                    row.getStepValue(),
+                    row.getResultValue()
+                };
+                model.addRow(rowData);
+            }
+        }
+        
+    }//GEN-LAST:event_FillTable
+
+    private void ClearTable(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ClearTable
+        //clear
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) integralTable.getModel();
+        offset = model.getRowCount();
+        for (int index = model.getRowCount() - 1; index >= 0; index--)
+        {
+            model.removeRow(index);
+        }
+        integralTable.setModel(model);
+    }//GEN-LAST:event_ClearTable
 
     /**
      * @param args the command line arguments
@@ -331,19 +442,21 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton clearButton;
+    private javax.swing.JButton fillButton;
+    private javax.swing.JTable integralTable;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel maxValueLabel;
+    private javax.swing.JTextField maxValueTextField;
+    private javax.swing.JLabel minValueLabel;
+    private javax.swing.JTextField minValueTextField;
+    private javax.swing.JButton removeButton;
+    private javax.swing.JButton resultButton;
+    private javax.swing.JLabel stepValueLabel;
+    private javax.swing.JTextField stepValueTextField;
+    private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 }
